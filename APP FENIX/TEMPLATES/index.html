@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados de Pádel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrar Resultado de Partido</h1>
+        <form action="/add_match" method="post">
+            <label for="rival">Equipo Rival:</label>
+            <input type="text" id="rival" name="rival" required><br>
+
+            <label for="player1">Jugador 1:</label>
+            <input type="text" id="player1" name="player1" required><br>
+            
+            <label for="player2">Jugador 2:</label>
+            <input type="text" id="player2" name="player2" required><br>
+
+            <label for="court">Pista:</label>
+            <input type="text" id="court" name="court" required><br>
+            
+            <label for="points_player1">Puntos Jugador 1:</label>
+            <input type="number" id="points_player1" name="points_player1" required><br>
+            
+            <label for="points_player2">Puntos Jugador 2:</label>
+            <input type="number" id="points_player2" name="points_player2" required><br>
+
+            <label for="points_couple">Resultado Puntos:</label>
+            <input type="text" id="points_couple" name="points_couple"><br>
+
+            <label for="result">Resultado:</label>
+            <div class="checkbox-container">
+            <div class="checkbox-item">
+                <label for="ganado">Ganado</label>
+                <input type="checkbox" id="ganado" name="result" value="Ganado">
+            </div>
+            <div class="checkbox-item">
+                <label for="perdido">Perdido</label>
+                <input type="checkbox" id="perdido" name="result" value="Perdido">
+            </div>
+            </div>
+
+            <button type="submit">Registrar</button>
+        </form>
+
+        <h2>Buscar Jugadora</h2>
+        <form action="/search" method="post">
+            <label for="player_name">Nombre de la Jugadora:</label>
+            <input type="text" id="player_name" name="player_name" required>
+            <button type="submit">Buscar</button>
+        </form>
+        
+        <h2>Resultados Registrados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rival</th>
+                    <th>Jugador 1</th>
+                    <th>Jugador 2</th>
+                    <th>Pista</th>
+                    <th>Puntos Jugador 1</th>
+                    <th>Puntos Jugador 2</th>
+                    <th>Resultado Puntos</th>
+                    <th>Resultado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in matches %}
+                    <tr>
+                        <td>{{ match[1] }}</td>
+                        <td>{{ match[2] }}</td>
+                        <td>{{ match[3] }}</td>
+                        <td>{{ match[4] }}</td>
+                        <td>{{ match[5] }}</td>
+                        <td>{{ match[6] }}</td>
+                        <td>{{ match[7] }}</td>
+                        <td>
+                            {% if match[8] == 'Ganado' %}
+                                Ganado
+                            {% elif match[8] == 'Perdido' %}
+                                Perdido
+                            {% else %}
+                                {{ match[8] }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/edit_match/{{ match[0] }}" class="button">Editar</a>
+                            <a href="/delete_match/{{ match[0] }}" class="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este partido?');">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Estadísticas</h2>
+        <a href="/plot" class="button">Ver Gráfico de Partidos Ganados vs Perdidos</a>
+    </div>
+</body>
+</html>

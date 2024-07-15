@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Resultado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Modificar Resultado de Partido</h1>
+        <form action="/edit_match/{{ id }}" method="post">
+            <label for="rival">Equipo Rival:</label>
+            <input type="text" id="rival" name="rival" value="{{ match[0] }}" required><br>
+
+            <label for="player1">Jugador 1:</label>
+            <input type="text" id="player1" name="player1" value="{{ match[1] }}" required><br>
+            
+            <label for="player2">Jugador 2:</label>
+            <input type="text" id="player2" name="player2" value="{{ match[2] }}" required><br>
+
+            <label for="court">Pista:</label>
+            <input type="text" id="court" name="court" value="{{ match[3] }}" required><br>
+            
+            <label for="points_player1">Puntos Jugador 1:</label>
+            <input type="number" id="points_player1" name="points_player1" value="{{ match[4] }}" required><br>
+            
+            <label for="points_player2">Puntos Jugador 2:</label>
+            <input type="number" id="points_player2" name="points_player2" value="{{ match[5] }}" required><br>
+
+            <label for="points_couple">Resultado Puntos:</label>
+            <input type="text" id="points_couple" name="points_couple" value="{{ match[6] }}" required><br>
+
+            <label for="result">Resultado Final:</label>
+            <input type="checkbox" id="result" name="result" value="Ganado" {% if match[8] == 'Ganado' %}checked{% endif %}> Ganado
+            <input type="checkbox" id="result" name="result" value="Perdido" {% if match[8] == 'Perdido' %}checked{% endif %}> Perdido<br>
+            
+            <button type="submit">Modificar</button>
+        </form>
+    </div>
+</body>
+</html>
