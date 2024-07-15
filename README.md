@@ -1,2 +1,2 @@
-# APP-F-NIX
+# APP-FÉNIX
 Aplicación para equipo de pádel
