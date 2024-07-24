@@ -6,6 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="logo">
+        <h1>FÉNIX GM PÁDEL CLUB</h1>
+        <img src="{{ url_for('static', filename='image/4.png') }}" alt="logo fénix">
+
+    </div>
+    
     <div class="container">
         <h1>Registrar Resultado de Partido</h1>
         <form action="/add_match" method="post">
@@ -32,15 +38,16 @@
 
             <label for="result">Resultado:</label>
             <div class="checkbox-container">
-            <div class="checkbox-item">
-                <label for="ganado">Ganado</label>
-                <input type="checkbox" id="ganado" name="result" value="Ganado">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="ganado" name="result" value="Ganado">
+                    <label for="ganado" class="checkbox-label">Ganado</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="perdido" name="result" value="Perdido">
+                    <label for="perdido" class="checkbox-label">Perdido</label>
+                </div>
             </div>
-            <div class="checkbox-item">
-                <label for="perdido">Perdido</label>
-                <input type="checkbox" id="perdido" name="result" value="Perdido">
-            </div>
-            </div>
+           
 
             <button type="submit">Registrar</button>
         </form>
@@ -77,15 +84,17 @@
                         <td>{{ match[5] }}</td>
                         <td>{{ match[6] }}</td>
                         <td>{{ match[7] }}</td>
+                        <td>{{ match[9] }}</td>
                         <td>
                             {% if match[8] == 'Ganado' %}
                                 Ganado
                             {% elif match[8] == 'Perdido' %}
                                 Perdido
                             {% else %}
-                                {{ match[8] }}
+                                {{ match[8] }}  <!-- Esto podría mostrar ' 0' si el valor no es 'Ganado' ni 'Perdido' -->
                             {% endif %}
                         </td>
+                        
                         <td>
                             <a href="/edit_match/{{ match[0] }}" class="button">Editar</a>
                             <a href="/delete_match/{{ match[0] }}" class="button" onclick="return confirm('¿Estás seguro de que quieres eliminar este partido?');">Eliminar</a>

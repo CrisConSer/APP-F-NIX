@@ -29,7 +29,11 @@ def index():
         cursor = conn.cursor()
         cursor.execute('SELECT id, rival, player1, player2, court, points_player1, points_player2, points_couple, total_points, result FROM matches')
         matches = cursor.fetchall()
+
+    
+
     return render_template('index.html', matches=matches)
+
 
 # Ruta para agregar un partido
 @app.route('/add_match', methods=['POST'])
@@ -43,14 +47,18 @@ def add_match():
     points_couple = request.form['points_couple']
     result = request.form.get('result')  # Checkbox
 
-    if not player1 or not player2 or not court or not points_player1 or not points_player2 or result is None:
+    if not player1 or not player2 or not court or not points_player1 or not points_player2 or not result:
         return "Todos los campos son obligatorios", 400
-    
+
     try:
         points_player1 = int(points_player1)
         points_player2 = int(points_player2)
     except ValueError:
         return "Los puntos deben ser números enteros", 400
+
+    # Validar que result sea "Ganado" o "Perdido"
+    if result not in ['Ganado', 'Perdido']:
+        return "El resultado debe ser 'Ganado' o 'Perdido'", 400
 
     total_points = points_player1 + points_player2
 
@@ -59,8 +67,10 @@ def add_match():
         cursor.execute('INSERT INTO matches (rival, player1, player2, court, points_player1, points_player2, total_points, result, points_couple) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                        (rival, player1, player2, court, points_player1, points_player2, total_points, result, points_couple))
         conn.commit()
-    
+
     return redirect('/')
+
+
 
 # Ruta para eliminar un partido
 @app.route('/delete_match/<int:id>')
@@ -160,6 +170,33 @@ def plot():
     plt.close()
 
     return send_file(buf, mimetype='image/png')
+
+#Ruta de búsqueda por partidos ganados/perdidos
+
+@app.route('/search_matches', methods=['GET', 'POST'])
+def search_matches():
+    results = []
+    search_query = ""
+
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        result_filter = request.form['result_filter']
+
+        query = '''
+        SELECT rival, player1, player2, court, points_player1, points_player2, points_couple, total_points, result 
+        FROM matches 
+        WHERE (player1 LIKE ? OR player2 LIKE ? OR rival LIKE ?) AND result = ?
+        '''
+        search_query_with_wildcards = f"%{search_query}%"
+        
+        with sqlite3.connect('database.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (search_query_with_wildcards, search_query_with_wildcards, search_query_with_wildcards, result_filter))
+            results = cursor.fetchall()
+
+    return render_template('search_matches.html', results=results, search_query=search_query)
+
+
 
 # Ruta para el gráfico de partidos ganados vs perdidos por jugador
 @app.route('/plot_player/<name>')

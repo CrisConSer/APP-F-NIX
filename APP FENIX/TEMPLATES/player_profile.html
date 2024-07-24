@@ -28,6 +28,7 @@
                 <th>Puntos Jugador 2</th>
                 <th>Total de Puntos</th>
                 <th>Resultado</th>
+                <th>Puntos de Sets</th>
             </tr>
             {% for match in matches %}
                 <tr>
@@ -45,7 +46,24 @@
             {% endfor %}
         </table>
 
-        <a href="/">Volver</a>
+        <h2>Detalles de Partidos</h2>
+        <table>
+            <tr>
+                <th>Número de Pista</th>
+                <th>Rival</th>
+                <th>Total de Puntos Obtenidos</th>
+            </tr>
+            {% for match in matches %}
+                <tr>
+                    <td>{{ match[4] }}</td>
+                    <td>{{ match[1] }}</td>
+                    <td>{{ match[7] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        
+        <br><br>
+        <a href="/" class="button">Volver</a>
     </div>
 </body>
 </html>
